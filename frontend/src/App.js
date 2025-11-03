@@ -2,11 +2,16 @@
 import React, { useEffect, useState } from 'react';
 import './App.css';
 import 'leaflet/dist/leaflet.css';
-import axios from 'axios';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import L from 'leaflet';
+import {
+  getLocations,
+  createLocation,
+  updateLocation,
+  deleteLocation
+} from "./api/locationsApi";
 
-// Ajuste iconos
+// Ajuste de iconos Leaflet
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
   iconRetinaUrl: require('leaflet/dist/images/marker-icon-2x.png'),
@@ -17,21 +22,18 @@ L.Icon.Default.mergeOptions({
 function App() {
   const [locations, setLocations] = useState([]);
   const [loading, setLoading] = useState(true);
-
-  // Form state (se usa para crear y editar)
   const [form, setForm] = useState({ id: null, name: '', lat: '', lng: '', info: '' });
   const [isEditing, setIsEditing] = useState(false);
 
-  const API = 'http://localhost:3001/api/locations';
-
+  // 🔹 Obtener todas las ubicaciones
   const fetchLocations = async () => {
     try {
       setLoading(true);
-      const res = await axios.get(API);
-      setLocations(res.data || []);
+      const data = await getLocations();
+      setLocations(data || []);
     } catch (err) {
       console.error('Error fetching locations', err);
-      alert('Error al obtener ubicaciones. Revisa la consola.');
+      alert('Error al obtener ubicaciones');
     } finally {
       setLoading(false);
     }
@@ -41,13 +43,16 @@ function App() {
     fetchLocations();
   }, []);
 
-  // Create
+  // 🔹 Crear
   const handleCreate = async (e) => {
     e.preventDefault();
     const { name, lat, lng, info } = form;
-    if (!name || lat === '' || lng === '') { alert('Completa nombre, lat y lng'); return; }
+    if (!name || lat === '' || lng === '') {
+      alert('Completa nombre, lat y lng');
+      return;
+    }
     try {
-      await axios.post(API, { name, lat, lng, info });
+      await createLocation({ name, lat, lng, info });
       setForm({ id: null, name: '', lat: '', lng: '', info: '' });
       fetchLocations();
     } catch (err) {
@@ -56,20 +61,20 @@ function App() {
     }
   };
 
-  // Start editing
+  // 🔹 Iniciar edición
   const startEdit = (loc) => {
     setIsEditing(true);
     setForm({ id: loc.id, name: loc.name, lat: loc.lat, lng: loc.lng, info: loc.info || '' });
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  // Update
+  // 🔹 Actualizar
   const handleUpdate = async (e) => {
     e.preventDefault();
     const { id, name, lat, lng, info } = form;
     if (!id) return;
     try {
-      await axios.put(`${API}/${id}`, { name, lat, lng, info });
+      await updateLocation(id, { name, lat, lng, info });
       setIsEditing(false);
       setForm({ id: null, name: '', lat: '', lng: '', info: '' });
       fetchLocations();
@@ -79,15 +84,15 @@ function App() {
     }
   };
 
-  // Delete
+  // 🔹 Eliminar
   const handleDelete = async (id) => {
     if (!window.confirm('¿Eliminar esta ubicación?')) return;
     try {
-      await axios.delete(`${API}/${id}`);
+      await deleteLocation(id);
       fetchLocations();
     } catch (err) {
       console.error(err);
-      alert('Error al eliminar');
+      alert('Error al eliminar ubicación');
     }
   };
 
@@ -101,12 +106,23 @@ function App() {
       <div style={{ width: '90%', margin: '0 auto 20px', padding: 10, border: '1px solid #ddd', borderRadius: 8 }}>
         <h3>{isEditing ? 'Editar ubicación' : 'Agregar nueva ubicación'}</h3>
         <form onSubmit={isEditing ? handleUpdate : handleCreate} style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-          <input name="name" placeholder="Nombre" value={form.name} onChange={(e) => setForm({...form, name: e.target.value})} required />
-          <input name="lat" type="number" step="0.000001" placeholder="Latitud" value={form.lat} onChange={(e) => setForm({...form, lat: e.target.value})} required />
-          <input name="lng" type="number" step="0.000001" placeholder="Longitud" value={form.lng} onChange={(e) => setForm({...form, lng: e.target.value})} required />
-          <input name="info" placeholder="Info (opcional)" value={form.info} onChange={(e) => setForm({...form, info: e.target.value})} />
+          <input name="name" placeholder="Nombre" value={form.name}
+            onChange={(e) => setForm({ ...form, name: e.target.value })} required />
+          <input name="lat" type="number" step="0.000001" placeholder="Latitud" value={form.lat}
+            onChange={(e) => setForm({ ...form, lat: e.target.value })} required />
+          <input name="lng" type="number" step="0.000001" placeholder="Longitud" value={form.lng}
+            onChange={(e) => setForm({ ...form, lng: e.target.value })} required />
+          <input name="info" placeholder="Info (opcional)" value={form.info}
+            onChange={(e) => setForm({ ...form, info: e.target.value })} />
           <button type="submit">{isEditing ? 'Guardar cambios' : 'Agregar ubicación'}</button>
-          {isEditing && <button type="button" onClick={() => { setIsEditing(false); setForm({ id: null, name: '', lat: '', lng: '', info: '' }); }}>Cancelar</button>}
+          {isEditing && (
+            <button type="button" onClick={() => {
+              setIsEditing(false);
+              setForm({ id: null, name: '', lat: '', lng: '', info: '' });
+            }}>
+              Cancelar
+            </button>
+          )}
         </form>
       </div>
 
@@ -117,8 +133,8 @@ function App() {
           {locations.map(loc => (
             <Marker key={loc.id} position={[loc.lat, loc.lng]}>
               <Popup>
-                <strong>{loc.name}</strong><br/>
-                {loc.info && <div>{loc.info}<br/></div>}
+                <strong>{loc.name}</strong><br />
+                {loc.info && <div>{loc.info}<br /></div>}
                 <small>Lat: {loc.lat} — Lng: {loc.lng}</small>
               </Popup>
             </Marker>
@@ -126,13 +142,13 @@ function App() {
         </MapContainer>
       )}
 
-      {/* LISTA Y ACCIONES */}
+      {/* LISTA */}
       <div style={{ width: '90%', margin: '20px auto' }}>
         <button onClick={fetchLocations}>Refrescar ahora</button>
         <ul>
           {locations.map(l => (
             <li key={l.id} style={{ margin: '8px 0' }}>
-              <strong>{l.name}</strong> — lat: {l.lat}, lng: {l.lng} {' '}
+              <strong>{l.name}</strong> — lat: {l.lat}, lng: {l.lng}{' '}
               <button onClick={() => startEdit(l)}>Editar</button>{' '}
               <button onClick={() => handleDelete(l.id)}>Eliminar</button>
             </li>
