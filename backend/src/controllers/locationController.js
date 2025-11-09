@@ -1,36 +1,51 @@
-let locations = [
-  { id: 1, name: "Parque Simón Bolívar", lat: 4.6584, lng: -74.0935, info: "Bogotá" },
-];
+import Location from "../models/locationModel.js";
 
-export const getLocations = (req, res) => {
-  res.json(locations);
+// Crear ubicación
+export const createLocation = async (req, res) => {
+  try {
+    const newLoc = await Location.create(req.body);
+    res.json(newLoc);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Error creando ubicación" });
+  }
 };
 
-export const createLocation = (req, res) => {
-  const { name, lat, lng, info } = req.body;
-  const newLocation = {
-    id: locations.length + 1,
-    name,
-    lat: parseFloat(lat),
-    lng: parseFloat(lng),
-    info
-  };
-  locations.push(newLocation);
-  res.status(201).json(newLocation);
+// Obtener todas
+export const getLocations = async (req, res) => {
+  try {
+    const locs = await Location.findAll();
+    res.json(locs);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Error obteniendo ubicaciones" });
+  }
 };
 
-export const updateLocation = (req, res) => {
-  const { id } = req.params;
-  const { name, lat, lng, info } = req.body;
-  const index = locations.findIndex(loc => loc.id === parseInt(id));
-  if (index === -1) return res.status(404).json({ message: 'Ubicación no encontrada' });
-
-  locations[index] = { id: parseInt(id), name, lat, lng, info };
-  res.json(locations[index]);
+// Actualizar
+export const updateLocation = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const loc = await Location.findByPk(id);
+    if (!loc) return res.status(404).json({ error: "No encontrada" });
+    await loc.update(req.body);
+    res.json(loc);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Error actualizando ubicación" });
+  }
 };
 
-export const deleteLocation = (req, res) => {
-  const { id } = req.params;
-  locations = locations.filter(loc => loc.id !== parseInt(id));
-  res.json({ message: 'Ubicación eliminada' });
+// Eliminar
+export const deleteLocation = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const loc = await Location.findByPk(id);
+    if (!loc) return res.status(404).json({ error: "No encontrada" });
+    await loc.destroy();
+    res.json({ message: "Ubicación eliminada" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Error eliminando ubicación" });
+  }
 };
