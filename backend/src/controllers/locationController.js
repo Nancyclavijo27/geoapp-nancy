@@ -11,16 +11,34 @@ export const createLocation = async (req, res) => {
   }
 };
 
-// Obtener todas
+// Obtener todas en GEOJSON  ⬅️ ESTE ES EL CAMBIO IMPORTANTE
 export const getLocations = async (req, res) => {
   try {
     const locs = await Location.findAll();
-    res.json(locs);
+
+    const geojson = {
+      type: "FeatureCollection",
+      features: locs.map(loc => ({
+        type: "Feature",
+        geometry: {
+          type: "Point",
+          coordinates: [loc.lng, loc.lat] // (lng, lat)
+        },
+        properties: {
+          id: loc.id,
+          name: loc.name,
+          info: loc.info
+        }
+      }))
+    };
+
+    res.json(geojson);
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Error obteniendo ubicaciones" });
   }
 };
+
 
 // Actualizar
 export const updateLocation = async (req, res) => {
