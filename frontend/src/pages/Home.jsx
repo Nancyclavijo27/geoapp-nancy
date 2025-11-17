@@ -3,6 +3,7 @@ import LocationForm from "../components/LocationForm";
 import LocationList from "../components/LocationList";
 import MapView from "../components/MapView";
 import { useLocations } from "../hooks/useLocations";
+import Register from "../components/Register"; // ✅ importamos
 
 export default function Home() {
   const { locations, addLocation, editLocation, removeLocation } = useLocations();
@@ -10,6 +11,7 @@ export default function Home() {
 
   return (
     <div>
+       <Register /> {/* ✅ formulario de registro */}
       <LocationForm
         onAdd={addLocation}
         onEdit={editLocation}
