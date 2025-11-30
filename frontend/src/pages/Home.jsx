@@ -1,30 +1,25 @@
-import React, { useState } from "react";
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import LocationForm from "../components/LocationForm";
 import LocationList from "../components/LocationList";
 import MapView from "../components/MapView";
 import { useLocations } from "../hooks/useLocations";
-import Register from "../components/Register"; // ✅ importamos
 
 export default function Home() {
+  const navigate = useNavigate();
   const { locations, addLocation, editLocation, removeLocation } = useLocations();
-  const [editingLocation, setEditingLocation] = useState(null);
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) navigate("/login");
+  }, );
 
   return (
     <div>
-       <Register /> {/* ✅ formulario de registro */}
-      <LocationForm
-        onAdd={addLocation}
-        onEdit={editLocation}
-        editingLocation={editingLocation}
-      />
-
+      <h1>GeoApp Nancy</h1>
+      <LocationForm onAdd={addLocation} onEdit={editLocation} />
       <MapView locations={locations} />
-
-      <LocationList
-        locations={locations}
-        onEditClick={(loc) => setEditingLocation(loc)}
-        onDelete={removeLocation}
-      />
+      <LocationList locations={locations} onDelete={removeLocation} />
     </div>
   );
 }
