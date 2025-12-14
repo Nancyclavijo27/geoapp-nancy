@@ -11,18 +11,22 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        {/* Landing page */}
+        {/* Página principal */}
         <Route path="/" element={<Landing />} />
 
         {/* Login y Register */}
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
 
-        {/* Home interno */}
-        <Route path="/home" element={isAuthenticated ? <Home /> : <Navigate to="/" />} />
-
-        {/* Perfil protegido */}
-        <Route path="/profile" element={isAuthenticated ? <Profile /> : <Navigate to="/" />} />
+        {/* Rutas protegidas */}
+        <Route
+          path="/home"
+          element={isAuthenticated ? <Home /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/profile"
+          element={isAuthenticated ? <Profile /> : <Navigate to="/login" />}
+        />
       </Routes>
     </BrowserRouter>
   );

@@ -12,11 +12,29 @@ export default function Home() {
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token) navigate("/login");
-  }, );
+  }, [navigate]);
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    navigate("/login");
+  };
 
   return (
     <div>
+      {/* 🔹 NAVBAR SIMPLE */}
+      <nav style={{
+        display: "flex",
+        justifyContent: "space-between",
+        padding: "10px",
+        background: "#eee",
+        marginBottom: "20px"
+      }}>
+        <button onClick={() => navigate("/profile")}>Mi Perfil</button>
+        <button onClick={handleLogout}>Cerrar sesión</button>
+      </nav>
+
       <h1>GeoApp Nancy</h1>
+
       <LocationForm onAdd={addLocation} onEdit={editLocation} />
       <MapView locations={locations} />
       <LocationList locations={locations} onDelete={removeLocation} />

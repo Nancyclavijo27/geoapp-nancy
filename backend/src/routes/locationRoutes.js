@@ -5,12 +5,15 @@ import {
   updateLocation,
   deleteLocation
 } from '../controllers/locationController.js';
+import { authMiddleware } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
 router.get('/', getLocations);
-router.post('/', createLocation);
-router.put('/:id', updateLocation);
-router.delete('/:id', deleteLocation);
+
+// 🔐 SOLO usuarios con token pueden modificar
+router.post('/', authMiddleware, createLocation);
+router.put('/:id', authMiddleware, updateLocation);
+router.delete('/:id', authMiddleware, deleteLocation);
 
 export default router;

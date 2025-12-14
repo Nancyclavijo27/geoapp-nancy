@@ -1,6 +1,5 @@
-// src/pages/Profile.jsx
 import { useEffect, useState } from "react";
-import axios from "axios";
+import api from "../api/axiosInstance";
 import { useNavigate } from "react-router-dom";
 
 export default function Profile() {
@@ -9,20 +8,24 @@ export default function Profile() {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-
     if (!token) return navigate("/login");
 
-    axios
-      .get("http://localhost:3001/user/profile", {
-        headers: { Authorization: `Bearer ${token}` },
+    api
+      .get("/api/user/perfil")  // <--- SOLO ESTO
+      .then((res) => {
+        console.log("Perfil cargado:", res.data);
+        setUser(res.data);
       })
-      .then((res) => setUser(res.data))
-      .catch(() => navigate("/login"));
-  }, );
+      .catch((err) => {
+        console.error("Error al cargar perfil:", err.response?.data);
+        navigate("/login");
+      });
+  }, []); // <--- ARREGLADO
 
   return (
     <div style={{ margin: "50px auto", width: "350px" }}>
       <h2>Perfil de Usuario</h2>
+
       {user ? (
         <>
           <p><strong>Nombre:</strong> {user.name}</p>
