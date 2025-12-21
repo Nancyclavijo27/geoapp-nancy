@@ -1,32 +1,56 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+
 import Landing from "./pages/Landing";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Profile from "./pages/UserProfile";
+import AdminDashboard from "./pages/AdminDashboard";
+
+import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
-  const isAuthenticated = !!localStorage.getItem("token");
-
   return (
     <BrowserRouter>
       <Routes>
-        {/* Página principal */}
+        {/* 🌐 Página pública */}
         <Route path="/" element={<Landing />} />
 
-        {/* Login y Register */}
+        {/* 🔐 Autenticación */}
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
 
-        {/* Rutas protegidas */}
+        {/* 🏠 Rutas protegidas */}
         <Route
           path="/home"
-          element={isAuthenticated ? <Home /> : <Navigate to="/login" />}
+          element={
+            <ProtectedRoute>
+              <Home />
+            </ProtectedRoute>
+          }
         />
+
         <Route
           path="/profile"
-          element={isAuthenticated ? <Profile /> : <Navigate to="/login" />}
+          element={
+            <ProtectedRoute>
+              <Profile />
+            </ProtectedRoute>
+          }
         />
+
+        {/* 👑 Ruta solo admin */}
+        <Route
+          path="/admin"
+          element={
+            <ProtectedRoute adminOnly={true}>
+              <AdminDashboard />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* 🚫 Cualquier otra ruta */}
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>
   );

@@ -4,6 +4,7 @@ import locationRoutes from "./routes/locationRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
 import profileRoutes from "./routes/profileRoutes.js";
+import adminRoutes from "./routes/adminRoutes.js";
 import sequelize from "./config/db.js";
 
 
@@ -15,6 +16,7 @@ app.use("/api/locations", locationRoutes);
 app.use("/api/users", userRoutes);
 app.use("/auth", authRoutes);
 app.use("/api/user", profileRoutes);
+app.use("/api", adminRoutes);
 
 async function connectDB() {
   try {

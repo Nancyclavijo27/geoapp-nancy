@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import api from "../api/axiosInstance";
 import { useNavigate } from "react-router-dom";
+import { logout } from "../utils/auth";
+
 
 export default function Profile() {
   const [user, setUser] = useState(null);
@@ -20,7 +22,7 @@ export default function Profile() {
         console.error("Error al cargar perfil:", err.response?.data);
         navigate("/login");
       });
-  }, []); // <--- ARREGLADO
+  }, [navigate]); // <--- ARREGLADO
 
   return (
     <div style={{ margin: "50px auto", width: "350px" }}>
@@ -34,7 +36,8 @@ export default function Profile() {
           <button
             onClick={() => {
               localStorage.removeItem("token");
-              navigate("/login");
+              logout();
+              navigate("/login", { replace: true });
             }}
           >
             Cerrar sesión
