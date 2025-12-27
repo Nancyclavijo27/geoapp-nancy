@@ -1,5 +1,6 @@
 import { DataTypes } from "sequelize";
 import sequelize from "../config/db.js";
+import User from "./User.js";
 
 const TrackPoint = sequelize.define("TrackPoint", {
   lat: {
@@ -10,10 +11,20 @@ const TrackPoint = sequelize.define("TrackPoint", {
     type: DataTypes.FLOAT,
     allowNull: false,
   },
-  timestamp: {
-    type: DataTypes.DATE,
-    defaultValue: DataTypes.NOW,
+}, {
+  timestamps: true,
+});
+
+// 🔗 RELACIÓN
+TrackPoint.belongsTo(User, {
+  foreignKey: {
+    name: "userId",
+    allowNull: false,
   },
+});
+
+User.hasMany(TrackPoint, {
+  foreignKey: "userId",
 });
 
 export default TrackPoint;

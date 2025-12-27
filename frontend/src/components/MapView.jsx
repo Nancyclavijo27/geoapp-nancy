@@ -1,10 +1,11 @@
 import "leaflet/dist/leaflet.css";
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import { MapContainer, TileLayer, Marker, Popup, Polyline } from "react-leaflet";
 import L from "leaflet";
 import { useEffect, useState } from "react";
 import { socket } from "../api/socket";
+import useTrack from "../hooks/useTrack";
 
-// Arreglar iconos Leaflet
+// 🔧 Arreglar iconos Leaflet
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
   iconRetinaUrl: require("leaflet/dist/images/marker-icon-2x.png"),
@@ -12,16 +13,24 @@ L.Icon.Default.mergeOptions({
   shadowUrl: require("leaflet/dist/images/marker-shadow.png"),
 });
 
-export default function MapView({ locations }) {
+export default function MapView({ locations = [] }) {
+  // 📍 Centro del mapa
   const center = locations.length
     ? [locations[0].lat, locations[0].lng]
     : [4.65, -74.06];
 
+  // 📜 Historial desde backend
+  const { track = [] } = useTrack();
+
+  // 🚗 Posición en tiempo real
   const [livePosition, setLivePosition] = useState(null);
+
+  // 📐 Línea del recorrido (historial)
+  const polylinePositions = track.map(p => [p.lat, p.lng]);
 
   useEffect(() => {
     socket.on("connect", () => {
-      console.log("🟢 Conectado al socket:", socket.id);
+      console.log("🟢 Socket conectado:", socket.id);
     });
 
     socket.on("location:update", (data) => {
@@ -38,7 +47,7 @@ export default function MapView({ locations }) {
     <MapContainer center={center} zoom={13} className="map-container">
       <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
 
-      {/* Marcadores guardados */}
+      {/* 📍 Marcadores fijos */}
       {locations.map((l) => (
         <Marker key={l.id} position={[l.lat, l.lng]}>
           <Popup>
@@ -49,7 +58,12 @@ export default function MapView({ locations }) {
         </Marker>
       ))}
 
-      {/* 🚗 Marcador en tiempo real */}
+      {/* 🔴 HISTORIAL COMPLETO (línea roja) */}
+      {polylinePositions.length > 1 && (
+        <Polyline positions={polylinePositions} pathOptions={{ color: "red" }} />
+      )}
+
+      {/* 🚗 Movimiento en tiempo real */}
       {livePosition && (
         <Marker position={[livePosition.lat, livePosition.lng]}>
           <Popup>Movimiento en tiempo real</Popup>
