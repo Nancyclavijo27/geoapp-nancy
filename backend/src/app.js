@@ -14,6 +14,8 @@ import authRoutes from "./routes/authRoutes.js";
 import profileRoutes from "./routes/profileRoutes.js";
 import adminRoutes from "./routes/adminRoutes.js";
 import trackRoutes from "./routes/trackRoutes.js";
+import routeRoutes from "./routes/routeRoutes.js";
+
 
 const app = express();
 
@@ -32,6 +34,8 @@ app.use("/auth", authRoutes);
 app.use("/api/user", profileRoutes);
 app.use("/api", adminRoutes);
 app.use("/api", trackRoutes);
+app.use("/api", routeRoutes);
+
 
 /* ======================
    Conexión a Base de Datos
