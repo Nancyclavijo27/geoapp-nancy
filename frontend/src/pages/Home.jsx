@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import LocationForm from "../components/LocationForm";
@@ -6,13 +6,33 @@ import LocationList from "../components/LocationList";
 import MapView from "../components/MapView";
 
 import { useLocations } from "../hooks/useLocations";
+import useLiveLocation from "../hooks/useLiveLocation";
+
 import { isAdmin, logout } from "../utils/auth";
 
 export default function Home() {
   const navigate = useNavigate();
   const { locations, addLocation, editLocation, removeLocation } = useLocations();
 
-  // 🔹 Verificar token al cargar
+  /* ======================================================
+     🔴 GPS REAL (OPCIONAL – LISTO PERO APAGADO)
+     ====================================================== */
+  const [tracking, setTracking] = useState(false);
+  const { position, error } = useLiveLocation(tracking);
+
+  // 🧪 SOLO PARA PRUEBAS: ver si el GPS está funcionando
+  useEffect(() => {
+    if (position) {
+      console.log("📍 GPS real activo:", position);
+    }
+    if (error) {
+      console.error("❌ Error GPS:", error);
+    }
+  }, [position, error]);
+
+  /* ======================================================
+     🔐 Verificar sesión
+     ====================================================== */
   useEffect(() => {
     const token = localStorage.getItem("token");
     const user = JSON.parse(localStorage.getItem("user"));
@@ -21,15 +41,9 @@ export default function Home() {
       navigate("/login", { replace: true });
       return;
     }
-
-    // Opcional: si quieres redirigir usuarios normales lejos de admin
-    // if (!isAdmin() && window.location.pathname === "/admin") {
-    //   navigate("/home", { replace: true });
-    // }
   }, [navigate]);
 
-  // 🔹 Función para verificar admin
-  const admin = isAdmin(); // Debe devolver true si el usuario es admin
+  const admin = isAdmin();
 
   return (
     <div>
@@ -40,7 +54,7 @@ export default function Home() {
           justifyContent: "space-between",
           padding: "10px",
           background: "#eee",
-          marginBottom: "20px"
+          marginBottom: "20px",
         }}
       >
         <div>
@@ -60,7 +74,7 @@ export default function Home() {
 
         <button
           onClick={() => {
-            logout(); // Limpia token y usuario
+            logout();
             navigate("/login", { replace: true });
           }}
         >
@@ -70,6 +84,22 @@ export default function Home() {
 
       {/* 🔹 CONTENIDO */}
       <h1>GeoApp Nancy</h1>
+
+      {/* 🔧 GPS REAL – SOLO PARA DESARROLLO / PRUEBAS */}
+      {process.env.NODE_ENV === "development" && (
+        <div style={{ marginBottom: "15px" }}>
+          <button onClick={() => setTracking(true)}>
+            ▶️ Iniciar GPS real
+          </button>
+
+          <button
+            onClick={() => setTracking(false)}
+            style={{ marginLeft: "10px" }}
+          >
+            ⏹️ Detener GPS
+          </button>
+        </div>
+      )}
 
       <LocationForm onAdd={addLocation} onEdit={editLocation} />
       <MapView locations={locations} />
