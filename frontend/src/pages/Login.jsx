@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../api/axiosInstance"; // tu instancia de axios
+import { Link } from "react-router-dom";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -31,29 +32,41 @@ export default function Login() {
     }
   };
 
-  return (
-    <form onSubmit={handleSubmit} style={{ textAlign: "center", marginTop: "50px" }}>
-      <h2>Login</h2>
+ return (
+  <main>
+    <section>
+      <h2>Iniciar sesión</h2>
 
-      {error && <p style={{ color: "red" }}>{error}</p>}
+      {error && <p>{error}</p>}
 
-      <input
-        type="email"
-        placeholder="Email"
-        value={email}
-        onChange={e => setEmail(e.target.value)}
-      />
-      <br /><br />
+      <form onSubmit={handleSubmit}>
+        <div>
+          <input
+            type="email"
+            placeholder="Email"
+            value={email}
+            onChange={e => setEmail(e.target.value)}
+          />
+        </div>
 
-      <input
-        type="password"
-        placeholder="Password"
-        value={password}
-        onChange={e => setPassword(e.target.value)}
-      />
-      <br /><br />
+        <div>
+          <input
+            type="password"
+            placeholder="Contraseña"
+            value={password}
+            onChange={e => setPassword(e.target.value)}
+          />
+        </div>
 
-      <button type="submit">Ingresar</button>
-    </form>
-  );
+        <button type="submit">Entrar</button>
+      </form>
+
+      <p>
+        ¿No tienes cuenta?{" "}
+        <Link to="/register">Regístrate</Link>
+      </p>
+    </section>
+  </main>
+);
+
 }

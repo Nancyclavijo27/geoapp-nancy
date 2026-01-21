@@ -1,69 +1,80 @@
 import Location from "../models/locationModel.js";
 
-// Crear ubicación
+/**
+ * ===========================
+ * CREAR UBICACIÓN
+ * ===========================
+ */
 export const createLocation = async (req, res) => {
   try {
-    const newLoc = await Location.create(req.body);
-    res.json(newLoc);
-  } catch (err) {
-    console.error(err);
+    const { name, address } = req.body;
+    const userId = req.user.id;
+
+    if (!name) {
+      return res.status(400).json({ error: "El nombre es obligatorio" });
+    }
+
+    const location = await Location.create({
+      name,
+      address: address || null,
+      userId,
+      lat: null,
+      lng: null,
+    });
+
+    console.log("💾 Ubicación creada:", location.id);
+
+    res.status(201).json(location);
+  } catch (error) {
+    console.error("❌ Error creando ubicación:", error);
     res.status(500).json({ error: "Error creando ubicación" });
   }
 };
 
-// Obtener todas en GEOJSON  ⬅️ ESTE ES EL CAMBIO IMPORTANTE
+/**
+ * ===========================
+ * OBTENER UBICACIONES
+ * ===========================
+ */
 export const getLocations = async (req, res) => {
   try {
-    const locs = await Location.findAll();
+    const userId = req.user.id;
 
-    const geojson = {
-      type: "FeatureCollection",
-      features: locs.map(loc => ({
-        type: "Feature",
-        geometry: {
-          type: "Point",
-          coordinates: [loc.lng, loc.lat] // (lng, lat)
-        },
-        properties: {
-          id: loc.id,
-          name: loc.name,
-          info: loc.info
-        }
-      }))
-    };
+    const locations = await Location.findAll({
+      where: { userId },
+      order: [["createdAt", "DESC"]],
+    });
 
-    res.json(geojson);
-  } catch (err) {
-    console.error(err);
+    res.json(locations);
+  } catch (error) {
+    console.error("❌ Error obteniendo ubicaciones:", error);
     res.status(500).json({ error: "Error obteniendo ubicaciones" });
   }
 };
 
-
-// Actualizar
-export const updateLocation = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const loc = await Location.findByPk(id);
-    if (!loc) return res.status(404).json({ error: "No encontrada" });
-    await loc.update(req.body);
-    res.json(loc);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "Error actualizando ubicación" });
-  }
-};
-
-// Eliminar
+/**
+ * ===========================
+ * ELIMINAR UBICACIÓN
+ * ===========================
+ */
 export const deleteLocation = async (req, res) => {
   try {
     const { id } = req.params;
-    const loc = await Location.findByPk(id);
-    if (!loc) return res.status(404).json({ error: "No encontrada" });
-    await loc.destroy();
-    res.json({ message: "Ubicación eliminada" });
-  } catch (err) {
-    console.error(err);
+    const userId = req.user.id;
+
+    const location = await Location.findOne({
+      where: { id, userId },
+    });
+
+    if (!location) {
+      return res.status(404).json({ error: "Ubicación no encontrada" });
+    }
+
+    await location.destroy();
+
+    res.json({ message: "Ubicación eliminada correctamente" });
+  } catch (error) {
+    console.error("❌ Error eliminando ubicación:", error);
     res.status(500).json({ error: "Error eliminando ubicación" });
   }
 };

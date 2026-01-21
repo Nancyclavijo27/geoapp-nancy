@@ -1,45 +1,44 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
 import Landing from "./pages/Landing";
-import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+
+import Home from "./pages/Home";
+import RoutesPage from "./pages/RoutesPage";
+import RouteDetailPage from "./pages/RouteDetailPage";
 import Profile from "./pages/UserProfile";
 import AdminDashboard from "./pages/AdminDashboard";
+import MyRoutesPage from "./pages/MyRoutesPage";
 
 import ProtectedRoute from "./components/ProtectedRoute";
+import PrivateLayout from "./layouts/PrivateLayout";
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        {/* 🌐 Página pública */}
+        {/* 🌐 Públicas */}
         <Route path="/" element={<Landing />} />
-
-        {/* 🔐 Autenticación */}
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
 
-        {/* 🏠 Rutas protegidas */}
+        {/* 🔐 Protegidas */}
         <Route
-          path="/home"
           element={
             <ProtectedRoute>
-              <Home />
+              <PrivateLayout />
             </ProtectedRoute>
           }
-        />
+        >
+          <Route path="/home" element={<Home />} />
+          <Route path="/routes" element={<RoutesPage />} />
+          <Route path="/my-routes" element={<MyRoutesPage />} />
+          <Route path="/routes/:id" element={<RouteDetailPage />} />
+          <Route path="/profile" element={<Profile />} />
+        </Route>
 
-        <Route
-          path="/profile"
-          element={
-            <ProtectedRoute>
-              <Profile />
-            </ProtectedRoute>
-          }
-        />
-
-        {/* 👑 Ruta solo admin */}
+        {/* 👑 Admin */}
         <Route
           path="/admin"
           element={
@@ -49,7 +48,6 @@ function App() {
           }
         />
 
-        {/* 🚫 Cualquier otra ruta */}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>

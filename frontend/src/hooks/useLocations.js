@@ -1,43 +1,61 @@
-// frontend/src/hooks/useLocations.js
-import { useState, useEffect } from "react";
-import { getLocations, createLocation, updateLocation, deleteLocation } from "../api/locationsApi";
+import { useState, useEffect, useCallback } from "react";
+import {
+  getLocations,
+  createLocation,
+  deleteLocation,
+} from "../api/locationsApi";
 
-export function useLocations() {
+export const useLocations = () => {
   const [locations, setLocations] = useState([]);
 
-  const loadLocations = async () => {
-    const geo = await getLocations(); 
+  // ===========================
+  // CARGAR UBICACIONES
+  // ===========================
+  const loadLocations = useCallback(async () => {
+    try {
+      const data = await getLocations(); // Esto ya devuelve un array plano del backend
 
-    // 🔥 Convertir GeoJSON → lista normal
-    const parsed = geo.features.map(f => ({
-      id: f.properties.id,
-      name: f.properties.name,
-      info: f.properties.info,
-      lat: Number(f.geometry.coordinates[1]),
-      lng: Number(f.geometry.coordinates[0]),
-    }));
+      // ✅ Mapear directamente los datos para usar en React
+      const parsed = data.map((loc) => ({
+        id: loc.id,
+        name: loc.name,
+        address: loc.address,
+        info: loc.info,
+        lat: loc.lat,
+        lng: loc.lng,
+      }));
 
-    setLocations(parsed);
-  };
-
-  const addLocation = async (data) => {
-    await createLocation(data);
-    loadLocations();
-  };
-
-  const editLocation = async (id, data) => {
-    await updateLocation(id, data);
-    loadLocations();
-  };
-
-  const removeLocation = async (id) => {
-    await deleteLocation(id);
-    loadLocations();
-  };
+      setLocations(parsed);
+    } catch (error) {
+      console.error("❌ Error cargando ubicaciones:", error);
+      setLocations([]);
+    }
+  }, []);
 
   useEffect(() => {
     loadLocations();
-  }, []);
+  }, [loadLocations]);
 
-  return { locations, addLocation, editLocation, removeLocation };
-}
+  // ===========================
+  // AGREGAR UBICACIÓN
+  // ===========================
+  const addLocation = async (data) => {
+    await createLocation(data);
+    await loadLocations(); // 🔑 refresca la lista después de agregar
+  };
+
+  // ===========================
+  // ELIMINAR UBICACIÓN
+  // ===========================
+  const removeLocation = async (id) => {
+    await deleteLocation(id);
+    setLocations((prev) => prev.filter((l) => l.id !== id));
+  };
+
+  return {
+    locations,
+    loadLocations,
+    addLocation,
+    removeLocation,
+  };
+};

@@ -1,30 +1,29 @@
 import { DataTypes } from "sequelize";
 import sequelize from "../config/db.js";
-import User from "./User.js";
 
-const TrackPoint = sequelize.define("TrackPoint", {
-  lat: {
-    type: DataTypes.FLOAT,
-    allowNull: false,
+const TrackPoint = sequelize.define(
+  "TrackPoint",
+  {
+    lat: {
+      type: DataTypes.FLOAT,
+      allowNull: false,
+    },
+    lng: {
+      type: DataTypes.FLOAT,
+      allowNull: false,
+    },
+    userId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    name: {
+      type: DataTypes.STRING,
+      allowNull: true,   // 🔹 CLAVE PARA EVITAR TU ERROR
+    },
   },
-  lng: {
-    type: DataTypes.FLOAT,
-    allowNull: false,
-  },
-}, {
-  timestamps: true,
-});
-
-// 🔗 RELACIÓN
-TrackPoint.belongsTo(User, {
-  foreignKey: {
-    name: "userId",
-    allowNull: false,
-  },
-});
-
-User.hasMany(TrackPoint, {
-  foreignKey: "userId",
-});
+  {
+    timestamps: true,
+  }
+);
 
 export default TrackPoint;

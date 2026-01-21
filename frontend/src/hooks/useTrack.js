@@ -1,24 +1,31 @@
 import { useEffect, useState } from "react";
 import { getMyTrack } from "../api/tracksApi";
 
-export default function useTrack() {
-  const [track, setTrack] = useState([]); // 👈 CLAVE
+export default function useTrack(userId) {
+  const [track, setTrack] = useState([]); // datos de track
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null); // opcional, para manejar errores
 
   useEffect(() => {
+    if (!userId) return; // evita hacer la petición sin userId
+
     const fetchTrack = async () => {
+      setLoading(true);
+      setError(null);
+
       try {
-        const res = await getMyTrack();
+        const res = await getMyTrack(); // llamamos la API con userId
         setTrack(res.data || []);
-      } catch (error) {
-        console.error("❌ Error cargando track:", error);
+      } catch (err) {
+        console.error("❌ Error cargando track:", err);
+        setError(err);
       } finally {
         setLoading(false);
       }
     };
 
     fetchTrack();
-  }, []);
+  }, [userId]);
 
-  return { track, loading };
+  return { track, loading, error };
 }

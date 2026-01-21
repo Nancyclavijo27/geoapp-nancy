@@ -22,6 +22,12 @@ const Route = sequelize.define("Route", {
     type: DataTypes.DATE,
     allowNull: false,
   },
+
+  // 👉 NUEVO CAMPO (solo esto agregas)
+  path: {
+    type: DataTypes.JSON,
+    allowNull: true,
+  }
 });
 
 export default Route;

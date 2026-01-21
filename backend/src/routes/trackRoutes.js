@@ -1,10 +1,12 @@
-import express from "express";
-import { getUserTrack } from "../controllers/trackController.js";
+import { Router } from "express";
+import { saveTrackPoint, getRouteByUser, deleteTrackPoint } from "../controllers/trackController.js";
 import { authMiddleware } from "../middleware/authMiddleware.js";
 
-const router = express.Router();
+const router = Router();
+router.use(authMiddleware); // todos los endpoints requieren token
 
-// 🔒 Historial por usuario logueado
-router.get("/", authMiddleware, getUserTrack);
+router.post("/", saveTrackPoint);         // crear punto
+router.get("/", getRouteByUser);          // listar puntos del usuario
+router.delete("/:id", deleteTrackPoint);  // eliminar punto
 
 export default router;

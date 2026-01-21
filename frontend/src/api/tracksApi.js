@@ -1,5 +1,7 @@
-import axios from "./axiosInstance";
+import api from "./axiosInstance";
 
-export const getMyTrack = () => {
-  return axios.get("/api");
-};
+// Guardar un punto de track
+export const addTrackPoint = (trackData) => api.post("/api/track", trackData);
+
+// Obtener todos los puntos de un usuario
+export const getMyTrack = (userId) => api.get(`/api/track`);

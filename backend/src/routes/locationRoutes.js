@@ -2,18 +2,15 @@ import express from 'express';
 import {
   getLocations,
   createLocation,
-  updateLocation,
   deleteLocation
 } from '../controllers/locationController.js';
 import { authMiddleware } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
+router.use(authMiddleware); // todos requieren token
 
-router.get('/', getLocations);
-
-// 🔐 SOLO usuarios con token pueden modificar
-router.post('/', authMiddleware, createLocation);
-router.put('/:id', authMiddleware, updateLocation);
-router.delete('/:id', authMiddleware, deleteLocation);
+router.get('/', getLocations);          // listar ubicaciones
+router.post('/', createLocation);       // crear ubicación
+router.delete('/:id', deleteLocation);  // eliminar
 
 export default router;

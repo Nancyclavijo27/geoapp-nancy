@@ -1,87 +1,70 @@
-// frontend/src/components/LocationForm.jsx
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 
-const initialForm = { id: null, name: "", lat: "", lng: "", info: "" };
+export default function LocationForm({ onAdd, editingLocation }) {
+  const [name, setName] = useState("");
+  const [address, setAddress] = useState("");
+  const [info, setInfo] = useState("");
 
-export default function LocationForm({ onAdd, onEdit, editingLocation }) {
-  const [form, setForm] = useState(initialForm);
-  const isEditing = !!editingLocation;
-
+  // Si en el futuro editas
   useEffect(() => {
     if (editingLocation) {
-      setForm(editingLocation);
-    } else {
-      setForm(initialForm);
+      setName(editingLocation.name || "");
+      setAddress(editingLocation.address || "");
+      setInfo(editingLocation.info || "");
     }
   }, [editingLocation]);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!form.name || form.lat === "" || form.lng === "") {
-      alert("Completa nombre, lat y lng");
+    console.log("🔥 Enviando ubicación desde LocationForm");
+
+    if (!name.trim()) {
+      alert("El nombre es obligatorio");
       return;
     }
 
-    if (isEditing) {
-      onEdit(form.id, form);
-    } else {
-      onAdd(form);
-    }
+    await onAdd({
+      name,
+      address,
+      info,
+    });
 
-    setForm(initialForm);
+    // limpiar formulario
+    setName("");
+    setAddress("");
+    setInfo("");
   };
 
   return (
-    <div className="location-form">
-      <h3>{isEditing ? "Editar ubicación" : "Agregar nueva ubicación"}</h3>
+    <section>
+      <h2>Agregar nueva ubicación</h2>
 
-      <form onSubmit={handleSubmit} className="form-grid">
+      <form onSubmit={handleSubmit}>
         <input
-          name="name"
-          placeholder="Nombre"
-          value={form.name}
-          onChange={(e) => setForm({ ...form, name: e.target.value })}
-          required
+          type="text"
+          placeholder="Nombre del punto (ej: Tienda Don Luis)"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
         />
 
         <input
-          name="lat"
-          type="number"
-          step="0.000001"
-          placeholder="Latitud"
-          value={form.lat}
-          onChange={(e) => setForm({ ...form, lat: e.target.value })}
-          required
+          type="text"
+          placeholder="Dirección (ej: Carrera 50 #20-30, Bogotá)"
+          value={address}
+          onChange={(e) => setAddress(e.target.value)}
         />
 
-        <input
-          name="lng"
-          type="number"
-          step="0.000001"
-          placeholder="Longitud"
-          value={form.lng}
-          onChange={(e) => setForm({ ...form, lng: e.target.value })}
-          required
-        />
-
-        <input
-          name="info"
+        <textarea
           placeholder="Información (opcional)"
-          value={form.info}
-          onChange={(e) => setForm({ ...form, info: e.target.value })}
+          value={info}
+          onChange={(e) => setInfo(e.target.value)}
         />
 
         <button type="submit">
-          {isEditing ? "Guardar cambios" : "Agregar ubicación"}
+          Agregar ubicación
         </button>
-
-        {isEditing && (
-          <button type="button" onClick={() => setForm(initialForm)}>
-            Cancelar
-          </button>
-        )}
       </form>
-    </div>
+    </section>
   );
 }

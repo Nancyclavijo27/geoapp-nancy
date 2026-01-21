@@ -1,11 +1,22 @@
 import api from "./axiosInstance";
 
-// 🔹 crear ruta desde trackpoints
+// ✅ Ruta automática (con GPS / TrackPoints)
 export const processRoute = () => {
   return api.post("/api/routes/process");
 };
 
-// 🔹 obtener rutas del usuario
+// ✅ Ruta manual (NUEVA)
+export const processRouteManual = (locationIds) => {
+  return api.post("/api/routes/manual", {
+    locations: locationIds
+  });
+};
+
+// ✅ Obtener rutas del usuario
 export const getMyRoutes = () => {
   return api.get("/api/routes/me");
+};
+
+export const getRouteById = (id) => {
+  return api.get(`/api/routes/${id}`);
 };
