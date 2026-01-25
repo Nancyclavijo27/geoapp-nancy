@@ -61,6 +61,11 @@ export default function AdminDashboard() {
   return (
     <main style={{ padding: "30px" }}>
       <h1>Panel Admin (pruebas técnicas)</h1>
+      <p style={{ fontSize: "14px", color: "#666" }}>
+        Panel de pruebas técnicas.
+        Algunas funciones requieren GPS real activo.
+      </p>
+
       <p>Backend, GPS real y rutas procesadas</p>
 
       {/* GPS REAL */}
