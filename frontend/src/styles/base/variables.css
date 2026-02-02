@@ -1,0 +1,19 @@
+:root {
+  /* 🎨 Colores – marca Nancy */
+  --color-primary: #2563eb;     /* azul confianza */
+  --color-secondary: #16a34a;   /* verde progreso */
+  --color-accent: #f59e0b;      /* acento cálido */
+  --color-dark: #0f172a;        /* texto principal */
+  --color-light: #f8fafc;       /* fondo claro */
+  --color-muted: #64748b;       /* texto secundario */
+
+  /* 🅰 Tipografía */
+  --font-main: 'Inter', system-ui, sans-serif;
+
+  /* 📐 Tamaños */
+  --radius: 12px;
+  --radius-sm: 6px;
+
+  /* ⏱ Transiciones */
+  --transition: 0.2s ease-in-out;
+}

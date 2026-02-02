@@ -1,11 +1,17 @@
 import { useState, useEffect } from "react";
 
+import Card from "./ui/Card";
+import Button from "./ui/Button";
+import Input from "./ui/Input";
+import Textarea from "./ui/Textarea";
+
+import styles from "./LocationForm.module.css";
+
 export default function LocationForm({ onAdd, editingLocation }) {
   const [name, setName] = useState("");
   const [address, setAddress] = useState("");
   const [info, setInfo] = useState("");
 
-  // Si en el futuro editas
   useEffect(() => {
     if (editingLocation) {
       setName(editingLocation.name || "");
@@ -17,54 +23,51 @@ export default function LocationForm({ onAdd, editingLocation }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    console.log("🔥 Enviando ubicación desde LocationForm");
-
     if (!name.trim()) {
       alert("El nombre es obligatorio");
       return;
     }
 
-    await onAdd({
-      name,
-      address,
-      info,
-    });
+    await onAdd({ name, address, info });
 
-    // limpiar formulario
     setName("");
     setAddress("");
     setInfo("");
   };
 
   return (
-    <section>
-      <h2>Agregar nueva ubicación</h2>
+    <Card>
+      <h2 className={styles.title}>
+        {editingLocation ? "Editar ubicación" : "Agregar nueva ubicación"}
+      </h2>
 
-      <form onSubmit={handleSubmit}>
-        <input
+      <form onSubmit={handleSubmit} className={styles.form}>
+        <Input
           type="text"
           placeholder="Nombre del punto (ej: Tienda Don Luis)"
           value={name}
           onChange={(e) => setName(e.target.value)}
         />
 
-        <input
+        <Input
           type="text"
-          placeholder="Dirección (ej: Carrera 50 #20-30, Bogotá)"
+          placeholder="Dirección (ej: Carrera 50 #20-30)"
           value={address}
           onChange={(e) => setAddress(e.target.value)}
         />
 
-        <textarea
-          placeholder="Información (opcional)"
+        <Textarea
+          placeholder="Información adicional"
           value={info}
           onChange={(e) => setInfo(e.target.value)}
         />
 
-        <button type="submit">
-          Agregar ubicación
-        </button>
+        <div className={styles.actions}>
+          <Button type="submit">
+            {editingLocation ? "Guardar cambios" : "Agregar ubicación"}
+          </Button>
+        </div>
       </form>
-    </section>
+    </Card>
   );
 }

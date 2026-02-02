@@ -1,0 +1,38 @@
+.page {
+  display: flex;
+  justify-content: center;
+  padding: 60px 20px;
+}
+
+.card {
+  width: 100%;
+  max-width: 420px;
+
+  background: #ffffff;
+  padding: 25px;
+  border-radius: 14px;
+
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+}
+
+.card h2 {
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+.card p {
+  font-size: 0.95rem;
+}
+
+.logout {
+  margin-top: 20px;
+  width: 100%;
+
+  background: var(--color-danger);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  padding: 10px;
+
+  cursor: pointer;
+}

@@ -1,10 +1,11 @@
-import { Link, useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { logout } from "../utils/auth";
+import Button from "./ui/Button";
+import styles from "./Header.module.css";
 
 export default function Header() {
   const navigate = useNavigate();
 
-  // 🔑 leer usuario desde localStorage
   const user = JSON.parse(localStorage.getItem("user"));
   const isAdmin = user?.role === "admin";
 
@@ -14,38 +15,63 @@ export default function Header() {
   };
 
   return (
-    <header style={{ borderBottom: "1px solid #ddd", padding: "10px 20px" }}>
-      <nav style={{ display: "flex", alignItems: "center" }}>
-        {/* LOGO */}
-        <strong style={{ marginRight: "30px" }}>
+    <header className={styles.header}>
+      <nav className={styles.nav}>
+        {/* Logo */}
+        <div className={styles.logo}>
           Trayecta
-        </strong>
+        </div>
 
-        {/* MENÚ */}
-        <div style={{ display: "flex", gap: "15px" }}>
-          <Link to="/home">Home</Link>
-          <Link to="/routes">Rutas</Link>
-          <Link to="/my-routes">Mis rutas</Link>
-          <Link to="/profile">Perfil</Link>
+        {/* Menu */}
+        <div className={styles.menu}>
+          <NavLink to="/home" className={({ isActive }) =>
+            isActive ? `${styles.link} ${styles.active}` : styles.link
+          }>
+            Home
+          </NavLink>
 
-          {/* 🔧 SOLO ADMIN */}
+          <NavLink to="/routes" className={({ isActive }) =>
+            isActive ? `${styles.link} ${styles.active}` : styles.link
+          }>
+            Rutas
+          </NavLink>
+
+          <NavLink to="/my-routes" className={({ isActive }) =>
+            isActive ? `${styles.link} ${styles.active}` : styles.link
+          }>
+            Mis rutas
+          </NavLink>
+
+          <NavLink to="/profile" className={({ isActive }) =>
+            isActive ? `${styles.link} ${styles.active}` : styles.link
+          }>
+            Perfil
+          </NavLink>
+
           {isAdmin && (
-            <Link
+            <NavLink
               to="/admin"
-              style={{ color: "#c0392b", fontWeight: "bold" }}
+              className={({ isActive }) =>
+                isActive
+                  ? `${styles.link} ${styles.admin} ${styles.active}`
+                  : `${styles.link} ${styles.admin}`
+              }
             >
               🔧 Admin
-            </Link>
+            </NavLink>
           )}
         </div>
 
-        {/* LOGOUT */}
-        <button
-          onClick={handleLogout}
-          style={{ marginLeft: "auto" }}
-        >
-          Cerrar sesión
-        </button>
+        {/* Actions */}
+        <div className={styles.actions}>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={handleLogout}
+          >
+            Cerrar sesión
+          </Button>
+        </div>
       </nav>
     </header>
   );

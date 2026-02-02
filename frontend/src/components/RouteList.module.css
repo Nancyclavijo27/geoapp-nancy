@@ -1,0 +1,34 @@
+.routeList {
+  margin-top: 1.5rem;
+}
+
+.routeList h3 {
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.list {
+  list-style: none;
+  padding: 0;
+  margin: 0 auto;        /* 🔥 centro REAL */
+  width: 100%;
+  max-width: 420px;
+}
+
+.item {
+  margin-bottom: 0.75rem;
+  display: flex;         /* 🔥 centra el botón */
+  justify-content: center;
+}
+
+.routeBtn {
+  width: 100%;
+  max-width: 420px;      /* 🔥 evita que se pegue a la izquierda */
+  text-align: center;
+  background: #f0f4ff;
+  color: #1f2a44;
+}
+
+.routeBtn:hover {
+  background: #dce6ff;
+}

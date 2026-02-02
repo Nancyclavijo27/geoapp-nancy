@@ -1,0 +1,33 @@
+/* Contenedor principal de cada página */
+.page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1.5rem 1rem;
+}
+
+/* Para secciones dentro de una página */
+.section {
+  margin-bottom: 2rem;
+}
+
+/* Layout vertical básico */
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* Centrar contenido (login, landing, etc.) */
+.center {
+  min-height: calc(100vh - 60px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Responsive simple */
+@media (max-width: 768px) {
+  .page {
+    padding: 1rem;
+  }
+}

@@ -1,27 +1,33 @@
 import React from "react";
+import styles from "./LocationList.module.css";
+import Button from "./ui/Button";
+import Card from "./ui/Card";
 
 export default function LocationList({ locations, onDelete }) {
   const isAuthenticated = !!localStorage.getItem("token");
 
   return (
-    <div className="location-list">
-      <h3>Listado de ubicaciones</h3>
+    <Card>
+      <h3 className={styles.title}>Listado de ubicaciones</h3>
 
-      <ul>
+      <ul className={styles.list}>
         {locations.map((loc) => (
-          <li key={loc.id}>
-            <strong>{loc.name || "Sin nombre"}</strong>
-            <br />
-            📍 {loc.address || "Sin dirección registrada"}
+          <li key={loc.id} className={styles.item}>
+            <div>
+              <strong>{loc.name || "Sin nombre"}</strong>
+              <div className={styles.address}>
+                📍 {loc.address || "Sin dirección registrada"}
+              </div>
+            </div>
 
             {isAuthenticated && (
-              <button onClick={() => onDelete(loc.id)}>
+              <Button onClick={() => onDelete(loc.id)}>
                 Eliminar
-              </button>
+              </Button>
             )}
           </li>
         ))}
       </ul>
-    </div>
+    </Card>
   );
 }

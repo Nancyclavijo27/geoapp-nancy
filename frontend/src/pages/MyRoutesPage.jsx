@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getMyRoutes } from "../api/routesApi";
+import RouteList from "../components/RouteList";
+import styles from "./MyRoutesPage.module.css";
 
 export default function MyRoutesPage() {
   const [routes, setRoutes] = useState([]);
@@ -13,27 +15,20 @@ export default function MyRoutesPage() {
   }, []);
 
   return (
-    <main>
-      <h1>Mis rutas</h1>
+   <main className={styles.page}>
+  <header className={styles.header}>
+    <h1>Mis rutas</h1>
+  </header>
 
-      {routes.length === 0 ? (
-        <p>No tienes rutas procesadas aún</p>
-      ) : (
-        <ul>
-          {routes.map(route => (
-            <li key={route.id}>
-              📍 {route.distanceKm.toFixed(2)} km —{" "}
-              ⏱ {route.durationMin.toFixed(1)} min
+  {routes.length === 0 ? (
+    <p className={styles.empty}>No tienes rutas procesadas aún</p>
+  ) : (
+    <RouteList
+      routes={routes}
+      onSelect={(route) => navigate(`/routes/${route.id}`)}
+    />
+  )}
+</main>
 
-              <button
-                onClick={() => navigate(`/routes/${route.id}`)}
-              >
-                Ver detalle
-              </button>
-            </li>
-          ))}
-        </ul>
-      )}
-    </main>
   );
 }

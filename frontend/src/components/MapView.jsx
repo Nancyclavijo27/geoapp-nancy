@@ -1,4 +1,5 @@
 import "leaflet/dist/leaflet.css";
+import styles from "./MapView.module.css";
 import { MapContainer, TileLayer, Marker, Popup, Polyline } from "react-leaflet";
 import L from "leaflet";
 import { useEffect, useState } from "react";
@@ -44,7 +45,7 @@ export default function MapView({ locations = [] }) {
   }, []);
 
   return (
-    <MapContainer center={center} zoom={13} className="map-container">
+    <MapContainer center={center} zoom={13} className={styles.map}>
       <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
 
       {/* 📍 Marcadores fijos */}

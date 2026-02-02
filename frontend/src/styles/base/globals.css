@@ -1,0 +1,20 @@
+body {
+  font-family: var(--font-main);
+  background-color: var(--color-light);
+  color: var(--color-dark);
+  line-height: 1.5;
+}
+
+a {
+  color: var(--color-primary);
+  text-decoration: none;
+}
+
+h1 {
+  font-size: 1.8rem;
+  margin-bottom: 0.5rem;
+}
+
+p {
+  color: var(--color-muted);
+}

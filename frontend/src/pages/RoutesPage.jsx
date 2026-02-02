@@ -6,6 +6,10 @@ import { processRoute, processRouteManual } from "../api/routesApi";
 import LocationForm from "../components/LocationForm";
 import LocationList from "../components/LocationList";
 
+import Card from "../components/ui/Card";
+import Button from "../components/ui/Button";
+import styles from "./RoutesPage.module.css";
+
 export default function RoutesPage() {
   const navigate = useNavigate();
 
@@ -76,31 +80,42 @@ export default function RoutesPage() {
   };
 
   return (
-    <main style={{ padding: "20px" }}>
-      <h1>Gestión de rutas</h1>
+    <main className={styles.page}>
+  <div className={styles.container}>
+    <h1 className={styles.title}>Gestión de rutas</h1>
 
-      <LocationForm
-        onAdd={handleAdd}
-        editingLocation={editingLocation}
-      />
+    {/* FORM + LIST */}
+    <div className={styles.content}>
+      <Card>
+        <LocationForm
+          onAdd={handleAdd}
+          editingLocation={editingLocation}
+        />
+      </Card>
 
-      <LocationList
-        locations={locations}
-        onDelete={handleDelete}
-        onEdit={(loc) => setEditingLocation(loc)} // reservado para el futuro
-      />
+      <Card>
+        <LocationList
+          locations={locations}
+          onDelete={handleDelete}
+          onEdit={(loc) => setEditingLocation(loc)}
+        />
+      </Card>
+    </div>
 
-      {locations.length >= 2 && (
-        <>
-          <button onClick={handleProcessManual}>
-            ✅ Crear ruta con MIS puntos
-          </button>
+    {/* BOTONES */}
+    {locations.length >= 2 && (
+      <div className={styles.actions}>
+        <Button onClick={handleProcessManual}>
+          ✅ Crear ruta con MIS puntos
+        </Button>
 
-          <button onClick={handleProcessAutomatic}>
-            ⚙️ Procesar ruta con GPS
-          </button>
-        </>
-      )}
-    </main>
+        <Button onClick={handleProcessAutomatic}>
+          ⚙️ Procesar ruta con GPS
+        </Button>
+      </div>
+    )}
+  </div>
+</main>
+
   );
 }

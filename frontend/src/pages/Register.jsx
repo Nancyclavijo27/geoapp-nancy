@@ -1,10 +1,15 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import api from "../api/axiosInstance";
-import { Link } from "react-router-dom";
+
+import styles from "./Login.module.css";
+
+import Input from "../components/ui/Input";
+import Button from "../components/ui/Button";
 
 export default function Register() {
   const navigate = useNavigate();
+
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -13,8 +18,11 @@ export default function Register() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const { data } = await api.post("/api/users/register", { name, email, password });
-
+      const { data } = await api.post("/api/users/register", {
+        name,
+        email,
+        password,
+      });
       localStorage.setItem("token", data.token);
       navigate("/home");
     } catch (err) {
@@ -23,42 +31,43 @@ export default function Register() {
   };
 
   return (
-  <main>
-    <section>
-      <h2>Crear cuenta</h2>
+    <main className={styles.main}>
+      <section className={styles.card}>
+        <h2 className={styles.title}>Crear cuenta</h2>
 
-      {error && <p>{error}</p>}
+        {error && <p className={styles.error}>{error}</p>}
 
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          placeholder="Nombre"
-          value={name}
-          onChange={e => setName(e.target.value)}
-        />
+        <form onSubmit={handleSubmit} className={styles.form}>
+          <Input
+            type="text"
+            placeholder="Nombre"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
 
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={e => setEmail(e.target.value)}
-        />
+          <Input
+            type="email"
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
 
-        <input
-          type="password"
-          placeholder="Contraseña"
-          value={password}
-          onChange={e => setPassword(e.target.value)}
-        />
+          <Input
+            type="password"
+            placeholder="Contraseña"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
 
-        <button type="submit">Registrarse</button>
-      </form>
+          <Button type="submit" fullWidth>
+            Registrarse
+          </Button>
+        </form>
 
-      <p>
-        ¿Ya tienes cuenta?{" "}
-        <Link to="/login">Inicia sesión</Link>
-      </p>
-    </section>
-  </main>
-);
+        <p className={styles.footerText}>
+          ¿Ya tienes cuenta? <Link to="/login">Inicia sesión</Link>
+        </p>
+      </section>
+    </main>
+  );
 }

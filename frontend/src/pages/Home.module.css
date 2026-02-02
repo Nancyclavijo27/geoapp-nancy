@@ -1,0 +1,76 @@
+.page {
+  min-height: calc(100vh - 64px); /* header */
+  display: flex;
+  align-items: stretch;
+}
+
+
+/* Layout dashboard */
+.dashboard {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 20px;
+}
+
+/* Mapa */
+.mapWrapper {
+  height: clamp(420px, 70vh, 720px);
+  border-radius: 16px;
+  overflow: hidden;
+
+  background: var(--color-bg-card);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+/* Panel derecho */
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Cards del panel */
+.card {
+  background: var(--color-bg-card);
+  border-radius: 14px;
+  padding: 16px;
+
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.card h4 {
+  margin: 0 0 6px;
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  font-weight: 600;
+}
+
+.card p {
+  margin: 0;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--color-primary);
+}
+
+/* 📱 Responsive */
+@media (max-width: 900px) {
+  .dashboard {
+    grid-template-columns: 1fr;
+  }
+
+  .panel {
+    flex-direction: row;
+  }
+
+  .card {
+    flex: 1;
+    text-align: center;
+  }
+}
+
+@media (max-width: 520px) {
+  .panel {
+    flex-direction: column;
+  }
+}

@@ -1,36 +1,37 @@
-// src/pages/Landing.jsx
 import { Link } from "react-router-dom";
+import styles from "./Landing.module.css";
+import Button from "../components/ui/Button";
 
 export default function Landing() {
   return (
-    <main>
-      <section>
-        <h1>Trayecta</h1>
+    <main className={styles.main}>
+      <section className={styles.section}>
+        <h1 className={styles.title}>Trayecta</h1>
 
-        <p>
+        <p className={styles.text}>
           Seguimiento de rutas en tiempo real,
           <br />
           simple y confiable.
         </p>
 
-        <p>
+        <p className={styles.text}>
           Ideal para logística, monitoreo
           <br />
           y control de recorridos.
         </p>
 
-        <div>
+        <div className={styles.buttons}>
           <Link to="/login">
-            <button>Iniciar sesión</button>
+            <Button>Iniciar sesión</Button>
           </Link>
 
           <Link to="/register">
-            <button>Registrarse</button>
+            <Button variant="secondary">Registrarse</Button>
           </Link>
         </div>
       </section>
 
-      <footer>
+      <footer className={styles.footer}>
         © 2026 – Desarrollado por Nancy Clavijo
       </footer>
     </main>

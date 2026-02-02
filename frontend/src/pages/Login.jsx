@@ -1,72 +1,67 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import api from "../api/axiosInstance"; // tu instancia de axios
-import { Link } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
+import api from "../api/axiosInstance";
+
+import styles from "./Login.module.css";
+
+import Input from "../components/ui/Input";
+import Button from "../components/ui/Button";
 
 export default function Login() {
   const navigate = useNavigate();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     try {
       const { data } = await api.post("/auth/login", { email, password });
 
-      // Guardar token
       localStorage.setItem("token", data.token);
-
-      // Guardar usuario con rol
       localStorage.setItem("user", JSON.stringify(data.user));
 
-      if (data.user.role?.toUpperCase() === "ADMIN") {
-  navigate("/admin");
-} else {
-  navigate("/home");
-}
+      data.user.role?.toUpperCase() === "ADMIN"
+        ? navigate("/admin")
+        : navigate("/home");
 
     } catch (err) {
       setError(err.response?.data?.message || "Email o contraseña incorrectos");
     }
   };
 
- return (
-  <main>
-    <section>
-      <h2>Iniciar sesión</h2>
+  return (
+    <main className={styles.main}>
+      <section className={styles.card}>
+        <h2 className={styles.title}>Iniciar sesión</h2>
 
-      {error && <p>{error}</p>}
+        {error && <p className={styles.error}>{error}</p>}
 
-      <form onSubmit={handleSubmit}>
-        <div>
-          <input
+        <form onSubmit={handleSubmit} className={styles.form}>
+          <Input
             type="email"
             placeholder="Email"
             value={email}
-            onChange={e => setEmail(e.target.value)}
+            onChange={(e) => setEmail(e.target.value)}
           />
-        </div>
 
-        <div>
-          <input
+          <Input
             type="password"
             placeholder="Contraseña"
             value={password}
-            onChange={e => setPassword(e.target.value)}
+            onChange={(e) => setPassword(e.target.value)}
           />
-        </div>
 
-        <button type="submit">Entrar</button>
-      </form>
+          <Button type="submit" fullWidth>
+            Entrar
+          </Button>
+        </form>
 
-      <p>
-        ¿No tienes cuenta?{" "}
-        <Link to="/register">Regístrate</Link>
-      </p>
-    </section>
-  </main>
-);
-
+        <p className={styles.footerText}>
+          ¿No tienes cuenta? <Link to="/register">Regístrate</Link>
+        </p>
+      </section>
+    </main>
+  );
 }
