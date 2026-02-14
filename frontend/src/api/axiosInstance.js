@@ -1,8 +1,12 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "http://localhost:3001",
+  baseURL:
+    process.env.NODE_ENV === "production"
+      ? "https://geoapp-nancy.onrender.com"
+      : "http://localhost:3001",
 });
+
 
 api.interceptors.request.use(
   (config) => {
