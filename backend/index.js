@@ -9,12 +9,19 @@ const PORT = process.env.PORT || 3001;
 const server = http.createServer(app);
 
 // 2️⃣ Socket.IO
+const allowedOrigins = [
+  "http://localhost:3000",
+  "https://geoapp-nancy-frontend.onrender.com"
+];
+
 const io = new Server(server, {
   cors: {
-    origin: process.env.FRONTEND_URL || "http://localhost:3000",
+    origin: allowedOrigins,
     methods: ["GET", "POST"],
+    credentials: true,
   },
 });
+
 
 
 // 🔁 Ruta simulada
