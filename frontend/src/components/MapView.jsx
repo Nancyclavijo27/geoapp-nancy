@@ -5,6 +5,8 @@ import L from "leaflet";
 import { useEffect, useState } from "react";
 import { socket } from "../api/socket";
 import useTrack from "../hooks/useTrack";
+import useLiveLocation from "../hooks/useLiveLocation";
+
 
 // 🔧 Arreglar iconos Leaflet
 delete L.Icon.Default.prototype._getIconUrl;
@@ -22,6 +24,8 @@ export default function MapView({ locations = [] }) {
 
   // 📜 Historial desde backend
   const { track = [] } = useTrack();
+  const { position, error } = useLiveLocation(true);
+
 
   // 🚗 Posición en tiempo real
   const [livePosition, setLivePosition] = useState(null);
@@ -43,6 +47,14 @@ export default function MapView({ locations = [] }) {
       socket.off("location:update");
     };
   }, []);
+
+  useEffect(() => {
+  if (position) {
+    console.log("📤 Enviando ubicación:", position);
+    socket.emit("location:update", position);
+  }
+}, [position]);
+
 
   return (
     <MapContainer center={center} zoom={13} className={styles.map}>
@@ -70,6 +82,13 @@ export default function MapView({ locations = [] }) {
           <Popup>Movimiento en tiempo real</Popup>
         </Marker>
       )}
+
+      {position && (
+  <Marker position={[position.lat, position.lng]}>
+    <Popup>Mi ubicación actual</Popup>
+  </Marker>
+)}
+
     </MapContainer>
   );
 }
