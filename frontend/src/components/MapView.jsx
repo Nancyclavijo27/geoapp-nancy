@@ -24,7 +24,7 @@ export default function MapView({ locations = [] }) {
 
   // 📜 Historial desde backend
   const { track = [] } = useTrack();
-  const { position, error } = useLiveLocation(true);
+  const { position } = useLiveLocation(true);
 
 
   // 🚗 Posición en tiempo real
