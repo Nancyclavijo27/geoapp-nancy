@@ -1,14 +1,13 @@
 import http from "http";
 import { Server } from "socket.io";
+import jwt from "jsonwebtoken";
 import app from "./src/app.js";
 import TrackPoint from "./src/models/TrackPoint.js";
 
 const PORT = process.env.PORT || 3001;
 
-// 1️⃣ Crear servidor HTTP
 const server = http.createServer(app);
 
-// 2️⃣ Configurar Socket.IO
 const allowedOrigins = [
   "http://localhost:3000",
   "https://geoapp-nancy-frontend.onrender.com"
@@ -22,30 +21,39 @@ const io = new Server(server, {
   },
 });
 
-// 3️⃣ Conexión real con GPS
+// 🔐 Middleware para validar token del socket
+io.use((socket, next) => {
+  try {
+    const token = socket.handshake.auth.token;
+
+    if (!token) {
+      return next(new Error("No token"));
+    }
+
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    socket.user = decoded; // 👈 guardamos usuario en el socket
+
+    next();
+  } catch (err) {
+    next(new Error("Token inválido"));
+  }
+});
+
+// 🔵 Conexión
 io.on("connection", (socket) => {
   console.log("🟢 Cliente conectado:", socket.id);
 
-  // 📍 Recibir ubicación desde el frontend
   socket.on("location:update", async (data) => {
     try {
-      console.log("📥 Ubicación recibida:", data);
+      if (!data?.lat || !data?.lng) return;
 
-      if (!data?.lat || !data?.lng) {
-        console.log("⏸️ Coordenadas inválidas");
-        return;
-      }
-
-      // 👉 Guardar en base de datos
       const savedPoint = await TrackPoint.create({
-        userId: 1, // temporal (luego puedes usar usuario real)
+        userId: socket.user.id, // 👈 AQUÍ ESTÁ EL CAMBIO IMPORTANTE
         lat: data.lat,
         lng: data.lng,
       });
 
-      console.log("💾 Punto guardado:", savedPoint.lat, savedPoint.lng);
-
-      // 👉 Enviar a todos los clientes conectados
       io.emit("location:update", {
         lat: savedPoint.lat,
         lng: savedPoint.lng,
@@ -61,7 +69,6 @@ io.on("connection", (socket) => {
   });
 });
 
-// 4️⃣ Levantar servidor
 server.listen(PORT, () => {
   console.log(`🚀 Backend + Socket.IO corriendo en puerto ${PORT}`);
 });
