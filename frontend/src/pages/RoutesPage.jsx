@@ -20,6 +20,7 @@ export default function RoutesPage() {
   } = useLocations();
 
   const [editingLocation, setEditingLocation] = useState(null);
+  const [error, setError] = useState(""); // 👈 NUEVO
 
   // ===========================
   // CREAR UBICACIÓN
@@ -27,9 +28,10 @@ export default function RoutesPage() {
   const handleAdd = async (data) => {
     try {
       await addLocation(data);
+      setError("");
     } catch (err) {
       console.error("Error agregando ubicación:", err);
-      alert("No se pudo agregar la ubicación");
+      setError("No se pudo agregar la ubicación");
     }
   };
 
@@ -41,81 +43,103 @@ export default function RoutesPage() {
 
     try {
       await removeLocation(id);
+      setError("");
     } catch (err) {
       console.error("Error eliminando ubicación:", err);
-      alert("No se pudo eliminar");
+      setError("No se pudo eliminar el punto");
     }
   };
 
   // ===========================
-  // RUTAS
+  // RUTA AUTOMÁTICA (GPS)
   // ===========================
   const handleProcessAutomatic = async () => {
     try {
+      setError("");
+
       await processRoute();
-      alert("Ruta procesada automáticamente");
+
+      alert("Ruta generada correctamente ✅");
       navigate("/my-routes");
+
     } catch (err) {
       console.error(err);
-      alert("Error procesando la ruta automática");
+
+      setError(
+        err.response?.data?.message ||
+        "Necesitas al menos 2 puntos GPS para generar la ruta"
+      );
     }
   };
 
+  // ===========================
+  // RUTA MANUAL
+  // ===========================
   const handleProcessManual = async () => {
     try {
       const ids = locations.map((loc) => loc.id);
 
       if (ids.length < 2) {
-        alert("Debes tener al menos 2 puntos");
+        setError("Debes tener al menos 2 puntos manuales");
         return;
       }
 
+      setError("");
+
       await processRouteManual(ids);
-      alert("Ruta creada con tus puntos");
+
+      alert("Ruta creada correctamente ✅");
       navigate("/my-routes");
+
     } catch (err) {
       console.error(err);
-      alert("Error creando ruta manual");
+      setError("Error creando ruta manual");
     }
   };
 
   return (
     <main className={styles.page}>
-  <div className={styles.container}>
-    <h1 className={styles.title}>Gestión de rutas</h1>
+      <div className={styles.container}>
+        <h1 className={styles.title}>Gestión de rutas</h1>
 
-    {/* FORM + LIST */}
-    <div className={styles.content}>
-      <Card>
-        <LocationForm
-          onAdd={handleAdd}
-          editingLocation={editingLocation}
-        />
-      </Card>
+        {/* Mostrar error */}
+        {error && (
+          <p style={{ color: "red", marginBottom: "15px" }}>
+            {error}
+          </p>
+        )}
 
-      <Card>
-        <LocationList
-          locations={locations}
-          onDelete={handleDelete}
-          onEdit={(loc) => setEditingLocation(loc)}
-        />
-      </Card>
-    </div>
+        {/* FORM + LIST */}
+        <div className={styles.content}>
+          <Card>
+            <LocationForm
+              onAdd={handleAdd}
+              editingLocation={editingLocation}
+            />
+          </Card>
 
-    {/* BOTONES */}
-    {locations.length >= 2 && (
-      <div className={styles.actions}>
-        <Button onClick={handleProcessManual}>
-          ✅ Crear ruta con MIS puntos
-        </Button>
+          <Card>
+            <LocationList
+              locations={locations}
+              onDelete={handleDelete}
+              onEdit={(loc) => setEditingLocation(loc)}
+            />
+          </Card>
+        </div>
 
-        <Button onClick={handleProcessAutomatic}>
-          ⚙️ Procesar ruta con GPS
-        </Button>
+        {/* BOTONES */}
+        {locations.length >= 2 && (
+          <div className={styles.actions}>
+            <Button onClick={handleProcessManual}>
+              ✅ Crear ruta con MIS puntos
+            </Button>
+
+            <Button onClick={handleProcessAutomatic}>
+              ⚙️ Procesar ruta con GPS
+            </Button>
+          </div>
+        )}
       </div>
-    )}
-  </div>
-</main>
-
+    </main>
   );
 }
