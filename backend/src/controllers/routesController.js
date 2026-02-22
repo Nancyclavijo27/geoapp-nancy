@@ -14,6 +14,8 @@ export const createRouteFromTrack = async (req, res) => {
       order: [["createdAt", "ASC"]],
     });
 
+    console.log("🔎 PUNTOS ENCONTRADOS:", points.length);
+
     if (points.length < 2) {
       return res.status(400).json({ message: "No hay suficientes puntos" });
     }
