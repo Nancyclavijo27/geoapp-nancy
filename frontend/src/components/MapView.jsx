@@ -44,6 +44,7 @@ export default function MapView({ locations = [] }) {
     });
 
     return () => {
+      socket.off("connect");
       socket.off("location:update");
     };
   }, []);
