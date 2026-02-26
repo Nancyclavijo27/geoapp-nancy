@@ -127,7 +127,7 @@ Proyecto funcional con:
 Nancy Clavijo  
 Full Stack Developer  
 
-LinkedIn: (pon aquí tu link)  
+LinkedIn: https://www.linkedin.com/in/nancy-clavijo-varela-29353117a/ 
 GitHub: https://github.com/Nancyclavijo27
 
 ---
