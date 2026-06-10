@@ -28,7 +28,7 @@ GeoApp es una aplicación de seguimiento en tiempo real que:
 ### Inicio de Sesión
 
 <p align="center">
-  < <img width="250" height="1280" alt="image" src="https://github.com/user-attachments/assets/1441dba2-c8e0-4f1f-8ca5-c9827fdced4b" />
+  < <img width="250" height="600" alt="image" src="https://github.com/user-attachments/assets/1441dba2-c8e0-4f1f-8ca5-c9827fdced4b" />
 </p>
 
 ### Dashboard
