@@ -6,12 +6,9 @@ Aplicación web full-stack para monitoreo de ubicación en tiempo real usando We
 
 ## 🌐 Live Demo
 
-Frontend:
-https://geoapp-nancy-frontend.onrender.com
+La aplicación fue desplegada utilizando Render y Supabase.
 
-Backend API:
-https://geoapp-nancy.onrender.com
-
+Actualmente la disponibilidad de la demo puede verse afectada por limitaciones de los servicios gratuitos utilizados durante el despliegue.
 ---
 
 ## 🧠 Descripción
@@ -26,7 +23,37 @@ GeoApp es una aplicación de seguimiento en tiempo real que:
 
 ---
 
+## 📷 Capturas de Pantalla
+
+### Inicio de Sesión
+
+<p align="center">
+  <img width="400" alt="Login GeoApp" src="TU_URL" />
+</p>
+
+### Dashboard
+
+<p align="center">
+<img width="606" height="1280" alt="image" src="https://github.com/user-attachments/assets/d8f190fc-d5dc-4bf7-9590-71aa141391b4" />
+  </p>
+  
+### Mapa de ubicaciones
+
+<p align="center">
+<img width="606" height="1280" alt="image" src="https://github.com/user-attachments/assets/a5a3b09d-9bc8-4c9c-8c14-7de4b474f593" />
+  </p>
+
+   ### Lista de ubicaciones
+   
+<p align="center">
+<img width="606" height="1280" alt="image" src="https://github.com/user-attachments/assets/d0bcbc64-0685-47df-b3e3-9b891439d514" />
+</p>
+
+
+
 ## 🛠️ Tecnologías Utilizadas
+
+---
 
 ### Frontend
 - React
@@ -113,14 +140,31 @@ JWT_SECRET=
 
 ## 📌 Estado del Proyecto
 
-Proyecto funcional con:
+Características implementadas:
 
-✅ Autenticación  
-✅ WebSockets en producción  
-✅ Base de datos en la nube  
-✅ Deploy completo  
+✅ Autenticación JWT
+✅ Comunicación en tiempo real mediante Socket.IO
+✅ Persistencia de datos en PostgreSQL
+✅ Visualización geográfica con Leaflet
+✅ Arquitectura Full Stack cliente-servidor
+
+Nota:
+La disponibilidad de la demo puede verse afectada por las limitaciones de los servicios gratuitos utilizados para el despliegue.
 
 ---
+
+## 🚀 Aprendizajes
+
+Durante este proyecto desarrollé experiencia práctica en:
+
+- Desarrollo Full Stack.
+- Implementación de WebSockets.
+- Gestión de autenticación con JWT.
+- Diseño de APIs REST.
+- Integración entre React y Node.js.
+- Despliegue de aplicaciones en la nube.
+
+- ---
 
 ## 👩‍💻 Autora
 
@@ -141,4 +185,3 @@ Proyecto desarrollado como parte de mi transición profesional al desarrollo Ful
 - Deploy en producción
 - Arquitectura cliente-servidor
 
----
