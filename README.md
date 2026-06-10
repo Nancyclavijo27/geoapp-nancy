@@ -28,25 +28,25 @@ GeoApp es una aplicación de seguimiento en tiempo real que:
 ### Inicio de Sesión
 
 <p align="center">
-  < <img width="250" height="600" alt="image" src="https://github.com/user-attachments/assets/1441dba2-c8e0-4f1f-8ca5-c9827fdced4b" />
+  < <img width="250" height="500" alt="image" src="https://github.com/user-attachments/assets/1441dba2-c8e0-4f1f-8ca5-c9827fdced4b" />
 </p>
 
 ### Dashboard
 
 <p align="center">
-<img width="250" height="1280" alt="image" src="https://github.com/user-attachments/assets/d8f190fc-d5dc-4bf7-9590-71aa141391b4" />
+<img width="250" height="500" alt="image" src="https://github.com/user-attachments/assets/d8f190fc-d5dc-4bf7-9590-71aa141391b4" />
   </p>
   
 ### Mapa de ubicaciones
 
 <p align="center">
-<img width="250" height="1280" alt="image" src="https://github.com/user-attachments/assets/a5a3b09d-9bc8-4c9c-8c14-7de4b474f593" />
+<img width="250" height="500" alt="image" src="https://github.com/user-attachments/assets/a5a3b09d-9bc8-4c9c-8c14-7de4b474f593" />
   </p>
 
    ### Lista de ubicaciones
    
 <p align="center">
-<img width="250" height="1280" alt="image" src="https://github.com/user-attachments/assets/d0bcbc64-0685-47df-b3e3-9b891439d514" />
+<img width="250" height="500" alt="image" src="https://github.com/user-attachments/assets/d0bcbc64-0685-47df-b3e3-9b891439d514" />
 </p>
 
 
